@@ -4,26 +4,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CandidateItems 
+public class Candidate 
 {
 	private List<Item> items;
 	
 	public int count = 0;//计数
 	
-	public CandidateItems()
+	public Candidate()
 	{
 		count = 0;
 		items = new ArrayList<Item>();
 	}
 	
-	public CandidateItems(Item item)
+	public Candidate(Item item)
 	{
 		count = 0;
 		items = new ArrayList<Item>();
 		items.add(item);
 	}
 	
-	public CandidateItems(Collection<? extends Item> items)
+	public Candidate(Collection<? extends Item> items)
 	{
 		count = 0;
 		this.items = new ArrayList<Item>();
@@ -60,14 +60,14 @@ public class CandidateItems
 		return items.contains(item);
 	}
 	
-	public boolean contains(CandidateItems cand)
+	public boolean contains(Candidate cand)
 	{
 		return items.containsAll(cand.items);
 	}
 	
-	public CandidateItems sub(int startIndex, int endIndex)
+	public Candidate sub(int startIndex, int endIndex)
 	{
-		CandidateItems cand = new CandidateItems();
+		Candidate cand = new Candidate();
 		if(endIndex>items.size())
 			endIndex = items.size();
 		for(int i=startIndex; i<endIndex; i++)
@@ -101,16 +101,16 @@ public class CandidateItems
 			return true;
 		if(obj == null)         
 			return false;
-		if(!(obj instanceof CandidateItems))
+		if(!(obj instanceof Candidate))
 			return false;
 			  
-		final CandidateItems cand = (CandidateItems)obj;
+		final Candidate cand = (Candidate)obj;
 			  
 		return items.equals(cand.items);
 	}
 	
 	//按位相交
-	public List<Item> retain(CandidateItems cand)
+	public List<Item> retain(Candidate cand)
 	{
 		int i=0,j=0;
 		List<Item> retainItems = new ArrayList<Item>();
@@ -124,11 +124,11 @@ public class CandidateItems
 		return retainItems;
 	}
 	
-	public CandidateItems clone()
+	public Candidate clone()
 	{
 		List<Item> its = new ArrayList<Item>();
 		its.addAll(items);
-		return new CandidateItems(its);
+		return new Candidate(its);
 	}
 	
 	public List<Item> cloneItems()

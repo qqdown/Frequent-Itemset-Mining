@@ -3,12 +3,12 @@ package pers.itemsetmining.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.itemsetmining.CandidateItems;
+import pers.itemsetmining.Candidate;
 
 public class HashTreeNode 
 {
 	public HashTreeNode[] branches;//子节点
-	public List<CandidateItems> candidateSets;//候选项集合
+	public List<Candidate> candidateSets;//候选项集合
 	public boolean isLeaf;
 	
 	private int level;//所在层,根节点为0，不包含候选项
@@ -20,7 +20,7 @@ public class HashTreeNode
 		this.level = level;
 		this.degree = degree;
 		branches = new HashTreeNode[degree];
-		candidateSets = new ArrayList<CandidateItems>();
+		candidateSets = new ArrayList<Candidate>();
 	}
 
 	public int getLevel() {

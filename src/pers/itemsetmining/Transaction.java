@@ -3,11 +3,11 @@ package pers.itemsetmining;
 
 public class Transaction 
 {
-	public CandidateItems cand;
+	public Candidate cand;
 	
 	public Transaction()
 	{
-		cand = new CandidateItems();
+		cand = new Candidate();
 	}
 	
 	public boolean contains(Item item)

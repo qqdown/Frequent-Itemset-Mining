@@ -3,7 +3,7 @@ package pers.itemsetming.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
-import pers.itemsetmining.CandidateItems;
+import pers.itemsetmining.Candidate;
 import pers.itemsetmining.Item;
 import pers.itemsetmining.Transaction;
 import pers.itemsetmining.util.HashTree;
@@ -11,15 +11,15 @@ import pers.itemsetmining.util.HashTree;
 public class Apriori 
 {
 	private List<Transaction> transactions;
-	private List<CandidateItems> candi1itemset;
+	private List<Candidate> candi1itemset;
 	private double minsup;
 	
 	public Apriori(Item[] itemset, List<Transaction> transactions, double minsup)
 	{
-		candi1itemset = new ArrayList<CandidateItems>();
+		candi1itemset = new ArrayList<Candidate>();
 		for(Item it : itemset)
 		{
-			candi1itemset.add(new CandidateItems(it));
+			candi1itemset.add(new Candidate(it));
 		}
 		this.transactions = transactions;
 		this.minsup = minsup;
@@ -30,12 +30,12 @@ public class Apriori
 		
 	}
 	
-	public List<CandidateItems> run()
+	public List<Candidate> run()
 	{
 		int k = 1;
-		List<CandidateItems> freq1itemset = getFrequent1Itemset();
-		List<CandidateItems> resultSet = new ArrayList<CandidateItems>();
-		List<CandidateItems> candidateSet = freq1itemset;
+		List<Candidate> freq1itemset = getFrequent1Itemset();
+		List<Candidate> resultSet = new ArrayList<Candidate>();
+		List<Candidate> candidateSet = freq1itemset;
 		while(candidateSet != null && candidateSet.size()>0)
 		{
 			resultSet.addAll(candidateSet);
@@ -43,7 +43,7 @@ public class Apriori
 			k++;
 			HashTree ht = new HashTree(k, (int)Math.sqrt(candidateSet.size()/k));
 			//计数
-			for(CandidateItems ci : candidateSet)
+			for(Candidate ci : candidateSet)
 			{
 				ht.add(ci);
 			}
@@ -62,10 +62,10 @@ public class Apriori
 		return resultSet;
 	}
 	
-	private List<CandidateItems> getFrequent1Itemset()
+	private List<Candidate> getFrequent1Itemset()
 	{
-		List<CandidateItems> frequentSet = new ArrayList<CandidateItems>();
-		for(CandidateItems cand : candi1itemset)
+		List<Candidate> frequentSet = new ArrayList<Candidate>();
+		for(Candidate cand : candi1itemset)
 		{
 			for(Transaction t : transactions)
 			{
@@ -76,7 +76,7 @@ public class Apriori
 			}
 		}
 		
-		for(CandidateItems cand : candi1itemset)
+		for(Candidate cand : candi1itemset)
 		{
 			if(cand.count >= transactions.size()*minsup)
 				frequentSet.add(cand);
@@ -84,21 +84,21 @@ public class Apriori
 		return frequentSet;
 	}
 	
-	private List<CandidateItems> join(List<CandidateItems> fk, int k)
+	private List<Candidate> join(List<Candidate> fk, int k)
 	{
-		List<CandidateItems> candSet = new ArrayList<CandidateItems>();
+		List<Candidate> candSet = new ArrayList<Candidate>();
 		for(int i=0; i<fk.size(); i++)
 		{
-			CandidateItems candA = fk.get(i);
+			Candidate candA = fk.get(i);
 			for(int j=i+1; j<fk.size(); j++)
 			{
-				CandidateItems candB = fk.get(j);
+				Candidate candB = fk.get(j);
 				List<Item> items = candA.retain(candB);//对两个候选集合求交集
 				if(items.size() == k-1)
 				{
 					if(!candA.getLastItem().equals(candB.getLastItem()))//最后一个不同，保证前k-1个相同
 					{
-						CandidateItems ck_new = candA.clone();
+						Candidate ck_new = candA.clone();
 						//ck_new.count = 0;
 						ck_new.addItem(candB.getLastItem());
 						//prune 裁剪候选枝，ck_new的k-set都是频繁的
@@ -115,9 +115,9 @@ public class Apriori
 	}
 	
 	//判断子串（去掉最后一个元素）是否为频繁项
-	private boolean isSubsetFrequent(CandidateItems candidateSet, List<CandidateItems> freqSet)
+	private boolean isSubsetFrequent(Candidate candidateSet, List<Candidate> freqSet)
 	{
-		CandidateItems cand = candidateSet.clone();
+		Candidate cand = candidateSet.clone();
 		for(int i=0; i<candidateSet.getSize(); i++)
 		{
 			Item it = cand.removeItem(i);

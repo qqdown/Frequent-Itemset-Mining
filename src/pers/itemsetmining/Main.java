@@ -61,7 +61,7 @@ public class Main {
         		+ "transactions size:" + transactions.size());
 
         Apriori apriori = new Apriori(titleItemSet, transactions, minsup);
-        List<CandidateItems> resultSet = apriori.run();
+        List<Candidate> resultSet = apriori.run();
         
         String outputPath = "output/result.txt";
         File outFile = new File(outputPath);
@@ -71,7 +71,7 @@ public class Main {
         	outFile.createNewFile();
         FileWriter fw = new FileWriter(outFile.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
-        for(CandidateItems c : resultSet)
+        for(Candidate c : resultSet)
         {
         	System.out.println(c.toString() + " " +  (c.count*1.0/transactions.size()));
         	bw.write(c.toString() + " " +  (c.count*1.0/transactions.size()));
@@ -109,10 +109,10 @@ public class Main {
 		};
 		
 		HashTree ht = new HashTree(3, 3);
-		List<CandidateItems> cands = new ArrayList<CandidateItems>();
+		List<Candidate> cands = new ArrayList<Candidate>();
 		for(int i=0; i<candis.length; i+=3)
 		{
-			CandidateItems c = new CandidateItems();
+			Candidate c = new Candidate();
 			c.addItem(new Item(candis[i]+""));
 			c.addItem(new Item(candis[i+1]+""));
 			c.addItem(new Item(candis[i+2]+""));

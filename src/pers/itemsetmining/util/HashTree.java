@@ -1,6 +1,6 @@
 package pers.itemsetmining.util;
 
-import pers.itemsetmining.CandidateItems;
+import pers.itemsetmining.Candidate;
 import pers.itemsetmining.Transaction;
 
 public class HashTree 
@@ -16,7 +16,7 @@ public class HashTree
 		root = new HashTreeNode(0, degree);//创建根节点
 	}
 	
-	public void add(CandidateItems candi)
+	public void add(Candidate candi)
 	{
 		HashTreeNode node = root;
 		int curLevel = 0;//当前层数,0代表root
@@ -40,7 +40,7 @@ public class HashTree
 					if(node.branches[h].candidateSets.size() > splitThreashold && curLevel+1<candi.getSize())
 					{
 						node.branches[h].isLeaf = false;
-						for(CandidateItems c : node.branches[h].candidateSets)
+						for(Candidate c : node.branches[h].candidateSets)
 						{
 							int hash = c.getItem(curLevel+1).hashCode() % degree;
 							if(node.branches[h].branches[hash] == null)
@@ -64,13 +64,13 @@ public class HashTree
 	//计数，初始节点的count值都为0
 	public void count(Transaction trans, int k)
 	{
-		CandidateItems cand = trans.cand;
+		Candidate cand = trans.cand;
 
-		count(new CandidateItems(), cand, k, root);
+		count(new Candidate(), cand, k, root);
 	}
 	
 	//计数的递归函数，初始节点的count值都为0
-	private void count(CandidateItems prefixCand, CandidateItems searchCand, int k, HashTreeNode rootnode)
+	private void count(Candidate prefixCand, Candidate searchCand, int k, HashTreeNode rootnode)
 	{
 		//System.out.println(prefixCand.toString() + " | " + searchCand.toString());
 		
@@ -80,7 +80,7 @@ public class HashTree
 		//判断是否为子集
 		if(node.isLeaf)
 		{
-			for(CandidateItems c : node.candidateSets)
+			for(Candidate c : node.candidateSets)
 			{
 				boolean isContain = true;
 				//前缀相同，后缀包含
@@ -90,7 +90,7 @@ public class HashTree
 				}
 				else
 				{
-					CandidateItems remainCand = c.sub(prefixCand.getSize(), c.getSize());
+					Candidate remainCand = c.sub(prefixCand.getSize(), c.getSize());
 					for(int j=0; j<remainCand.getSize(); j++)
 					{
 						if(!searchCand.contains(remainCand.getItem(j)))
@@ -108,10 +108,10 @@ public class HashTree
 		}
 		else
 		{
-			CandidateItems newSearchCand = searchCand.clone();
+			Candidate newSearchCand = searchCand.clone();
 			for(int i=0; i<searchCand.getSize(); i++)
 			{
-				CandidateItems newPrefixCand = prefixCand.clone();
+				Candidate newPrefixCand = prefixCand.clone();
 				newPrefixCand.addItem(newSearchCand.removeItem(0));//每次SEARCH减少一个，prefix增加一个
 					
 				int h = searchCand.getItem(i).hashCode() % degree;
@@ -133,7 +133,7 @@ public class HashTree
 		if(root.isLeaf)
 		{
 			System.out.print(root.getLevel() + "," + i + ": ");
-			for(CandidateItems ci : root.candidateSets)
+			for(Candidate ci : root.candidateSets)
 			{
 				System.out.print(ci.toString() + " count:" + ci.count + "   ");
 			}
